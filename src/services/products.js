@@ -24,9 +24,9 @@ router.post('/:categoryId', async (req, res, next) => {
   }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:productId', async (req, res, next) => {
   try {
-    await Product.destroy({ where: { id: req.params.id } });
+    await Product.destroy({ where: { id: req.params.productId } });
     res.status(200).send({ message: 'destroyed' });
   } catch (error) {
     console.log(error);
