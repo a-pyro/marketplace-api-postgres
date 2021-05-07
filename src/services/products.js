@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Product } from '../db/index.js';
+import { Category, Product, Review } from '../db/index.js';
 
 const router = Router();
 
@@ -41,7 +41,12 @@ router.put('/:productId', async (req, res, next) => {
       where: { id: req.params.productId },
       returning: true,
     });
-    res.send(product[1][0]);
+    const returning = await Product.findAll({
+      where: { id: product[1][0].id },
+      include: [{ model: Category }, { model: Review }],
+      attributes: { exclude: ['categoryId', 'reviewId'] },
+    });
+    res.send(returning);
   } catch (e) {
     console.log(e);
   }
