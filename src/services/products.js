@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { Category, Product, Review, User } from '../db/index.js';
 import multerUploadCloudinary from '../middleware/pictureUpload.js';
+import sequelize from 'sequelize';
+const { Op, Sequelize } = sequelize;
+
 const upload = multerUploadCloudinary();
 
 const router = Router();
@@ -20,8 +23,26 @@ router.get('/:productId', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
   try {
-    const products = await Product.findAll();
-    res.status(200).send(products);
+    if (req.query.hasOwnProperty('name')) {
+      const { rows, count } = await Product.findAndCountAll({
+        where: { name: { [Op.iLike]: '%' + req.query.name + '%' } },
+        order: req.query.order,
+        limit: req.query.limit,
+        offset: req.query.offset,
+        include: [{ model: Category }, { model: Review }],
+        attributes: { exclude: ['categoryId', 'reviewId'] },
+      });
+      return res.status(200).send({ count, data: rows });
+    } else {
+      const { rows, count } = await Product.findAndCountAll({
+        order: req.query.order,
+        limit: req.query.limit,
+        offset: req.query.offset,
+        include: [{ model: Category }, { model: Review }],
+        attributes: { exclude: ['categoryId', 'reviewId'] },
+      });
+      return res.status(200).send({ count, data: rows });
+    }
   } catch (error) {
     console.log(error);
   }
