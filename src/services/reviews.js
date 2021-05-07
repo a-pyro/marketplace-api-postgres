@@ -1,11 +1,31 @@
 import { Router } from 'express';
-import { Review, Product, User } from '../db/index.js';
+import { Review, Product, User, Category } from '../db/index.js';
 const router = Router();
 
 router.get('/', async (req, res, next) => {
   try {
     const revs = await Review.findAll();
     res.send(revs);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get('/:reviewId', async (req, res, next) => {
+  try {
+    const review = await Review.findAll({
+      where: { id: req.params.reviewId },
+      include: [
+        { model: User },
+        {
+          model: Product,
+          include: Category,
+          attributes: { exclude: ['categoryId'] },
+        },
+      ],
+      attributes: { exclude: ['userId', 'productId'] },
+    });
+    res.send(review);
   } catch (error) {
     console.log(error);
   }
