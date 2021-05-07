@@ -5,7 +5,8 @@ const router = Router();
 
 router.get('/', async (req, res, next) => {
   try {
-    res.status(200).send('HI!');
+    const products = await Product.findAll();
+    res.status(200).send(products);
   } catch (error) {
     console.log(error);
   }
