@@ -11,7 +11,7 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 
-server.use('/articles', productRoutes);
+server.use('/products', productRoutes);
 server.use('/users', userRoutes);
 server.use('/reviews', reviewsRoutes);
 server.use('/categories', categoriesRouter);

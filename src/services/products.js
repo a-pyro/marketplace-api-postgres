@@ -11,14 +11,13 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/:authorId/:categoryId', async (req, res, next) => {
+router.post('/:categoryId', async (req, res, next) => {
   try {
-    const newArticle = await Article.create({
+    const newProd = await Product.create({
       ...req.body,
-      authorId: req.params.authorId,
       categoryId: req.params.categoryId,
     });
-    res.status(200).send(newArticle);
+    res.status(201).send(newProd);
   } catch (error) {
     console.log(error);
   }
