@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { Category, Product, Review, User } from '../db/index.js';
+import multerUploadCloudinary from '../middleware/pictureUpload.js';
+const upload = multerUploadCloudinary();
 
 const router = Router();
 
@@ -82,6 +84,26 @@ router.get('/:productId/reviews', async (req, res, next) => {
     res.send(reviews);
   } catch (error) {
     console.log(error);
+  }
+});
+
+router.post('/:productId/upload', upload, async (req, res, next) => {
+  try {
+    const updated = await Product.update(
+      { imageUrl: req.file.path },
+      {
+        where: { id: req.params.productId },
+        returning: true,
+      }
+    );
+    const product = await Product.findAll({
+      where: { id: updated[1][0].id },
+      include: [{ model: Category }, { model: Review }],
+      attributes: { exclude: ['categoryId', 'reviewId'] },
+    });
+    res.send(product[0]);
+  } catch (error) {
+    next(error);
   }
 });
 
