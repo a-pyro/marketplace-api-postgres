@@ -3,6 +3,19 @@ import { Category, Product, Review } from '../db/index.js';
 
 const router = Router();
 
+router.get('/:productId', async (req, res, next) => {
+  try {
+    const returning = await Product.findAll({
+      where: { id: req.params.productId },
+      include: [{ model: Category }, { model: Review }],
+      attributes: { exclude: ['categoryId', 'reviewId'] },
+    });
+    res.status(200).send(returning);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 router.get('/', async (req, res, next) => {
   try {
     const products = await Product.findAll();
