@@ -18,6 +18,8 @@ router.post('/:productId/:userId', async (req, res, next) => {
       productId: req.params.productId,
       userId: req.params.userId,
     });
+
+    res.status(200).send(product);
     res.send(rev);
   } catch (error) {
     console.log(error);

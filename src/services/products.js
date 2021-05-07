@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import { Category, Product, Review } from '../db/index.js';
+import { Category, Product, Review, User } from '../db/index.js';
 
 const router = Router();
 
 router.get('/:productId', async (req, res, next) => {
   try {
-    const returning = await Product.findAll({
+    const product = await Product.findAll({
       where: { id: req.params.productId },
       include: [{ model: Category }, { model: Review }],
       attributes: { exclude: ['categoryId', 'reviewId'] },
     });
-    res.status(200).send(returning);
+    res.status(200).send(product);
   } catch (error) {
     console.log(error);
   }
@@ -62,6 +62,26 @@ router.put('/:productId', async (req, res, next) => {
     res.send(returning);
   } catch (e) {
     console.log(e);
+  }
+});
+
+router.get('/:productId/reviews', async (req, res, next) => {
+  try {
+    const reviews = await Review.findAll({
+      where: { productId: req.params.productId },
+      include: [
+        { model: User },
+        {
+          model: Product,
+          include: Category,
+          attributes: { exclude: ['categoryId'] },
+        },
+      ],
+      attributes: { exclude: ['userId', 'productId'] },
+    });
+    res.send(reviews);
+  } catch (error) {
+    console.log(error);
   }
 });
 
