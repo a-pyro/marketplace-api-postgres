@@ -24,4 +24,13 @@ router.post('/:categoryId', async (req, res, next) => {
   }
 });
 
+router.delete('/:id', async (req, res, next) => {
+  try {
+    await Product.destroy({ where: { id: req.params.id } });
+    res.status(200).send({ message: 'destroyed' });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 export default router;
