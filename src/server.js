@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import productRoutes from './services/products.js';
-import userRoutes from './services/user.js';
+import userRoutes from './services/users.js';
 import categoriesRouter from './services/categories.js';
 import reviewsRoutes from './services/reviews.js';
 import { db } from './db/index.js';
@@ -12,7 +12,7 @@ server.use(cors());
 server.use(express.json());
 
 server.use('/articles', productRoutes);
-server.use('/user', userRoutes);
+server.use('/users', userRoutes);
 server.use('/reviews', reviewsRoutes);
 server.use('/categories', categoriesRouter);
 

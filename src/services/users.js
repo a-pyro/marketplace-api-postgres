@@ -5,9 +5,8 @@ const router = Router();
 
 router.post('/', async (req, res, next) => {
   try {
-    const author = await Author.create(req.body);
-
-    res.status(201).send(author);
+    const user = await User.create(req.body);
+    res.status(201).send(user);
   } catch (error) {
     console.log(error);
   }
