@@ -17,7 +17,7 @@ export const User = UserModel(db, DataTypes);
 export const Category = CategoryModel(db, DataTypes);
 export const Review = ReviewModel(db, DataTypes);
 
-User.hasMany(Review); //fk(User) in User
+User.hasMany(Review); //fk(User) in review
 Review.belongsTo(User);
 
 Product.hasMany(Review); //fk(Product) in review

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Review } from '../db/index.js';
+import { Review, Product, User } from '../db/index.js';
 const router = Router();
 
 router.get('/', async (req, res, next) => {
@@ -30,6 +30,24 @@ router.delete('/:reviewId', async (req, res, next) => {
     res.status(200).send({ message: 'destroyed' });
   } catch (error) {
     console.log(error);
+  }
+});
+
+router.put('/:reviewId', async (req, res, next) => {
+  try {
+    const review = await Review.update(req.body, {
+      where: { id: req.params.reviewId },
+      returning: true,
+      include: [{ model: User }],
+    });
+    const returning = await Review.findAll({
+      where: { id: review[1][0].id },
+      include: [{ model: User }, { model: Product }],
+      attributes: { exclude: ['userId', 'productId'] },
+    });
+    res.send(returning);
+  } catch (e) {
+    console.log(e);
   }
 });
 
