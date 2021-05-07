@@ -21,8 +21,13 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.put('/:userId', async (req, res, next) => {
   try {
+    const user = await User.update(req.body, {
+      where: { id: req.params.userId },
+      returning: true,
+    });
+    res.send(user);
   } catch (error) {
     console.log(error);
   }
